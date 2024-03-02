@@ -1,10 +1,11 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser,BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
-class UserManager(BaseUserManager) :
-    def create_user(self, email, password=None, **extra_fields):
+
+class UserManager(BaseUserManager):
+    def create_user(self, email, password, **extra_fields):
         if not email:
-            raise ValueError('The Email must be set')
+            raise ValueError("The email is not given.")
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.is_active = True
@@ -13,7 +14,9 @@ class UserManager(BaseUserManager) :
         return user
 
 
-class CustomUser(AbstractUser):
+
+
+class CustomUser(AbstractBaseUser):
     email = models.EmailField(max_length=254, unique=True)
     password = models.CharField(max_length=128, null=True)
     first_name = models.CharField(max_length=255, null=True, blank=True)
@@ -31,3 +34,6 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.email
+    
+
+# Create your models here.
