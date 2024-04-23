@@ -87,8 +87,12 @@ class LoginSerializer(serializers.Serializer):
         if not CustomUser.objects.filter(email=email).exists():
             raise serializers.ValidationError('Email does not exist.')
 
+        if not CustomUser.objects.filter(email=email, is_active=True).exists():
+            raise serializers.ValidationError('Please activate your account.')
+        
         user = authenticate(request=self.context.get('request'), email=email,
                             password=password)
+
 
         if not user:
             raise serializers.ValidationError("Wrong Credentials.")
