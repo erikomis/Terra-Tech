@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import FileUploadParser, MultiPartParser, FormParser, JSONParser
 # Create your views here.
-from .serializers import PhotosSerializer, PhotosListUSer
+from .serializers import PhotosSerializer, PhotosListUser
 from .models import Photo
 
 
@@ -32,16 +32,9 @@ class Delete_Photo(DestroyAPIView):
 
 class List_Photos(ListAPIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class =  PhotosListUSer  
+    serializer_class =  PhotosListUser  
 
     def get_queryset(self):
         user = self.request.user
         return Photo.objects.filter(user=user)
 
-    # def list(self, request, *args, **kwargs):
-
-    #     listPhotos = PhotosSerializer.Meta.model.objects.filter(user=request.user)
-
-    #     serializer = PhotosListUSer(listPhotos, many=True)
-
-    #     return Response(serializer.data, status=status.HTTP_200_OK)
