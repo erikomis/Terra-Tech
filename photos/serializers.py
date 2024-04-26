@@ -37,9 +37,10 @@ class UserPhotosSerializer(serializers.ModelSerializer):
             fields = ['id', 'email', ]
 
 class PhotosListUser(serializers.ModelSerializer) :
+    user = UserPhotosSerializer()  
     class Meta:
         model = Photo
-        fields = ['id', 'image',]
+        fields = ['id', 'image','there_disease','user']
         depth = 1
        
 
