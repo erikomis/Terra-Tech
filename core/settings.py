@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'photos',
 ]
 
-FRONTEND_URL = 'http://127.0.0.1:8000'
+FRONTEND_URL = os.environ.get('FRONTEND_URL')
 
 ANYMAIL = {
     "MAILGUN_API_KEY": os.environ.get('MAILGUN_API_KEY'),
@@ -154,3 +154,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'auth_api.CustomUser'
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
