@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Photo
 from .analysis import Analysis
 from auth_api.models import CustomUser as User
+from django.db.models import Count
 import os
 
 class PhotosSerializer(serializers.ModelSerializer):
@@ -17,9 +18,6 @@ class PhotosSerializer(serializers.ModelSerializer):
         script_dir = os.path.dirname(__file__)  # Obtém o diretório do script atual
         model_path = os.path.join(script_dir, 'model.pkl')  # Cria o caminho absoluto para model.pkl
         analysis_result = Analysis(photo.image.path, model_path).predict()
-
-        print (analysis_result)
-
         if analysis_result is not None:
             if analysis_result[0] == 1:
                photo.there_disease = True
@@ -27,7 +25,6 @@ class PhotosSerializer(serializers.ModelSerializer):
                 photo.there_disease = False
 
         photo.save()
-        print(photo.there_disease)
         return photo
     
 
@@ -50,5 +47,13 @@ class PhotosListUser(serializers.ModelSerializer) :
     
     
     
-  
+class PhotosCountThereDisease(serializers.ModelSerializer) :
+    user = UserPhotosSerializer()
+    
+    class Meta:
+        model = Photo
+        fields = ['id','user', 'there_disease','created_at', ]
 
+        depth = 1
+  
+       
