@@ -12,50 +12,52 @@ class Analysis :
         self.filename = filename
         
     def __read_imagem(self):
-        user_name = []
-
-        plant_dark_std = []
-
-        plant_B_mean = []
-
-        plant_G_mean = []
-        plant_G_std = []
-
-        plant_R_mean =[]
-        plant_R_std = []
+        black_std =[]
+        rgb_std = []
+        b_mean = []
+        b_std = []
+        g_mean = []
+        g_std = []
 
         if self.imagem_path is None:
-            raise ValueError('Imagem is None')
+          raise ValueError('Imagem is None')
+
+        
+
+        imagem_black = cv2.cvtColor(self.imagem_path, cv2.COLOR_BGR2GRAY)
 
         imagem_rgb = cv2.normalize(self.imagem_path,None,0,256,
-                    cv2.NORM_MINMAX, dtype=cv2.CV_32F)
-        (B, G, R) = cv2.split(self.imagem_path)
+                            cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+        imagem_cortada = imagem_rgb[int(len(imagem_rgb)/2)-300:int((len(imagem_rgb)/2)+600),int(len(imagem_rgb[0])/2)-300:int((len(imagem_rgb[0])/2)+500)]
+        imagem_cortada_black = imagem_black[int(len(imagem_black)/2)-300:int((len(imagem_black)/2)+600),int(len(imagem_black[0])/2)-300:int((len(imagem_black[0])/2)+500)]
+
+        (B, G, R) = cv2.split(imagem_cortada)
 
         if self.filename == None:
            raise ValueError('Filename is None')
 
-            ## Nome
-        user_name.append(self.filename)
-        ## Preto e branco
-        plant_dark_std.append(np.std(cv2.calcHist(imagem_rgb,[0],None,[256], [0, 256])))
+        black_std =[]
+        rgb_std = []
+        b_mean = []
+        b_std = []
+        g_mean = []
+        g_std = []
+                ## Nome
+        black_std.append(np.std(imagem_cortada_black))
+        rgb_std.append(np.mean(imagem_rgb))
+        b_mean.append(np.mean(B))
+        b_std.append(np.std(B))
+        g_mean.append(np.mean(G))
+        g_std.append(np.std(G))
 
-            ## Blue
-        plant_B_mean.append(np.mean(cv2.calcHist(B,[0],None,[256], [0, 256])))
-            ## Gren
-        plant_G_mean.append(np.mean(cv2.calcHist(G,[0],None,[256], [0, 256])))
-        plant_G_std.append(np.std(cv2.calcHist(G,[0],None,[256], [0, 256])))
-
-            ## RED
-        plant_R_mean.append(np.mean(cv2.calcHist(R,[0],None,[256], [0, 256])))
-        plant_R_std.append(np.std(cv2.calcHist(R,[0],None,[256], [0, 256])))
-
+        
         df = pd.DataFrame()
-        df['dark_std'] = plant_dark_std
-        df['B_mean'] = plant_B_mean
-        df['G_Mean'] = plant_G_mean
-        df['G_std'] = plant_G_std
-        df['R_mean'] = plant_R_mean
-        df['R_std'] = plant_R_std
+        df['black_std'] = black_std
+        df['rgb_std'] = rgb_std
+        df['b_mean'] = b_mean
+        df['b_std'] = b_std
+        df['g_mean'] = g_mean
+        df['g_std'] = g_std
         return df
 
     def __trata_df(self,df):
@@ -64,10 +66,11 @@ class Analysis :
         df_ajuste = scaler.fit_transform(df)
         df_ajuste = pd.DataFrame(df_ajuste,columns=df.columns)
         return df_ajuste
-
+    
 
     def __usage_model(self,df):
-        loaded_model = joblib.load(self.filename)
+        modelo =  self.filename
+        loaded_model = joblib.load(modelo)
         return loaded_model.predict(df)
 
     def predict(self):
@@ -75,4 +78,4 @@ class Analysis :
         df_tratado = self.__trata_df(imagem_todata)
         predict = self.__usage_model(df_tratado)
         return predict
-
+    

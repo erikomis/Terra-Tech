@@ -16,7 +16,7 @@ class PhotosSerializer(serializers.ModelSerializer):
     
 
         script_dir = os.path.dirname(__file__)  # Obtém o diretório do script atual
-        model_path = os.path.join(script_dir, 'model.pkl')  # Cria o caminho absoluto para model.pkl
+        model_path = os.path.join(script_dir, 'modelo.joblib')  # Cria o caminho absoluto para model.pkl
         analysis_result = Analysis(photo.image.path, model_path).predict()
         if analysis_result is not None:
             if analysis_result[0] == 1:
@@ -53,7 +53,6 @@ class PhotosCountThereDisease(serializers.ModelSerializer) :
     class Meta:
         model = Photo
         fields = ['id','user', 'there_disease','created_at', ]
-
         depth = 1
   
        
