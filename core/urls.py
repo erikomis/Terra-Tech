@@ -23,4 +23,6 @@ urlpatterns = [
     path('photos',  photo_views.UPLOAD_PHOTO.as_view()),
     path('photos/<int:pk>',  photo_views.Delete_Photo.as_view()),
     path('photos/', photo_views.List_Photos.as_view()),
+    path('photos/filter/', photo_views.Filter_Photos.as_view()),
 ]
+urlpatterns += static (settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
