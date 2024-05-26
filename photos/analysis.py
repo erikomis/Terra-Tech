@@ -6,7 +6,7 @@ import numpy as np
 
 
 
-class Analysis : 
+class Analysis :
     def __init__(self,imagem_path, filename):
         self.imagem_path = cv2.imread(imagem_path)
         self.filename = filename
@@ -42,15 +42,31 @@ class Analysis :
         b_std = []
         g_mean = []
         g_std = []
+        dados_foto = []
                 ## Nome
         black_std.append(np.std(imagem_cortada_black))
-        rgb_std.append(np.mean(imagem_rgb))
+        rgb_std.append(np.std(imagem_rgb))
         b_mean.append(np.mean(B))
         b_std.append(np.std(B))
         g_mean.append(np.mean(G))
         g_std.append(np.std(G))
+        dados_foto.append(1)
 
-        
+        black_std.append(9.24232424245032) 
+        black_std.append(87.04032748460934) 
+        rgb_std.append(85.873146) 
+        rgb_std.append(30.12307929992676) #Valor minimo rgb_std
+        b_mean.append(3.8900719)
+        b_mean.append(169.6479949951172) 
+        b_std.append(85.48547)
+        b_std.append(7.284865)
+        g_mean.append(51.643063)
+        g_mean.append(210.3330993652344)
+        g_std.append(92.25825)
+        g_std.append(8.36779)
+        dados_foto.append(0)
+        dados_foto.append(0)
+
         df = pd.DataFrame()
         df['black_std'] = black_std
         df['rgb_std'] = rgb_std
@@ -58,18 +74,19 @@ class Analysis :
         df['b_std'] = b_std
         df['g_mean'] = g_mean
         df['g_std'] = g_std
+        df['dados_foto']= dados_foto
         return df
 
     def __trata_df(self,df):
         scaler = MinMaxScaler()
-
         df_ajuste = scaler.fit_transform(df)
         df_ajuste = pd.DataFrame(df_ajuste,columns=df.columns)
+        df_ajuste = df_ajuste.loc[df_ajuste['dados_foto']==1][['black_std','rgb_std','b_mean','b_std','g_mean','g_std']]
         return df_ajuste
     
 
     def __usage_model(self,df):
-        modelo =  self.filename
+        modelo = self.filename
         loaded_model = joblib.load(modelo)
         return loaded_model.predict(df)
 
@@ -78,4 +95,3 @@ class Analysis :
         df_tratado = self.__trata_df(imagem_todata)
         predict = self.__usage_model(df_tratado)
         return predict
-    
