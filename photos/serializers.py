@@ -8,16 +8,17 @@ import os
 class PhotosSerializer(serializers.ModelSerializer):
     class Meta:
         model = Photo
-        fields = ['id', 'image', 'user'] 
-    
+        fields = ['id', 'image',] 
+
     def create(self, validated_data):
-        image = validated_data.pop('image')
-        photo = Photo.objects.create(image=image, user=validated_data['user'])
+        image = validated_data.pop('image')      
+        photo = Photo.objects.create(image=image, user=self.context.get('user'))
     
 
         script_dir = os.path.dirname(__file__)  # Obtém o diretório do script atual
         model_path = os.path.join(script_dir, 'modelo.joblib')  # Cria o caminho absoluto para model.pkl
         analysis_result = Analysis(photo.image.path, model_path).predict()
+
         if analysis_result is not None:
             if analysis_result[0] == 1:
                photo.there_disease = True
