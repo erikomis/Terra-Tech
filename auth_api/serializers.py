@@ -75,31 +75,41 @@ class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(style={'input_type': 'password'}, trim_whitespace=False)
 
+    def send_activation_email(self, user):
+        try:
+            subject = 'Ative sua conta'
+            message = f'Olá {user.first_name},\n\nBem-vindo ao nosso site. Estamos felizes em tê-lo aqui.'
+            email_from = 'suporte@www.projetos-web.com'
+            recipient_list = [user.email]
+            html_content = f'Olá {user.first_name},\n\nPara ativar sua conta, clique no link a seguir:\n\n{settings.FRONTEND_URL}/activate/{user.token_ativacao}/'
+            send_mail(subject, message, email_from, recipient_list, html_message=html_content)
+        except Exception as e:
+            print(e)
+
     def validate(self, attrs):
         email = attrs.get('email').lower()
         password = attrs.get('password')
-        print(email)
-        print(password)
 
         if not email or not password:
-            raise serializers.ValidationError("Please give both email or password.")
+            raise serializers.ValidationError("Por favor, forneça um email e senha.")
 
-        if not CustomUser.objects.filter(email=email).exists():
-            raise serializers.ValidationError('Email does not exist.')
+        try:
+            user = CustomUser.objects.get(email=email)
+        except CustomUser.DoesNotExist:
+            raise serializers.ValidationError("Email não existe.")
 
-        if not CustomUser.objects.filter(email=email, is_active=True).exists():
-            raise serializers.ValidationError('Please activate your account.')
-        
-        user = authenticate(request=self.context.get('request'), email=email,
-                            password=password)
+        if not user.is_active:
+            self.send_activation_email(user)
+            raise serializers.ValidationError('Por favor, ative sua conta. Um email de ativação foi enviado.')
 
+        user = authenticate(request=self.context.get('request'), email=email, password=password)
 
         if not user:
-            raise serializers.ValidationError("Wrong Credentials.")
-        print(user)
+            raise serializers.ValidationError("Credenciais inválidas.")
+
         attrs['user'] = user
         return attrs
-    
+
 class ActivateAccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
