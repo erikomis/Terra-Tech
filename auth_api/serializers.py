@@ -30,13 +30,11 @@ class CreateUserSerializerr(serializers.ModelSerializer):
     def send_email(self, user):
         try:
             subject = 'Ative sua conta'
-            message = f'Hi {user.first_name},\n\nWelcome to our site. We are glad to have you here.'
-            email_from = 'suport@www.projetos-web.com'
-            recipient_list = [user.email]  # Passando o email como uma lista
+            message = f'Olá {user.first_name},\n\nBem-vindo ao nosso App. Estamos felizes em tê-lo aqui.'
+            email_from = 'suporte@www.projetos-web.com'
+            recipient_list = [user.email]
             html_content = f'Olá {user.first_name},\n\nPara ativar sua conta, clique no link a seguir:\n\n{settings.FRONTEND_URL}/activate/{user.token_ativacao}/'
-
-            email = send_mail(subject, message, email_from, recipient_list, html_message=html_content)
-            email.send()
+            send_mail(subject, message, email_from, recipient_list, html_message=html_content)
             
         except Exception as e:
             print(e)    
@@ -78,7 +76,7 @@ class LoginSerializer(serializers.Serializer):
     def send_activation_email(self, user):
         try:
             subject = 'Ative sua conta'
-            message = f'Olá {user.first_name},\n\nBem-vindo ao nosso site. Estamos felizes em tê-lo aqui.'
+            message = f'Olá {user.first_name},\n\nBem-vindo ao nosso App. Estamos felizes em tê-lo aqui.'
             email_from = 'suporte@www.projetos-web.com'
             recipient_list = [user.email]
             html_content = f'Olá {user.first_name},\n\nPara ativar sua conta, clique no link a seguir:\n\n{settings.FRONTEND_URL}/activate/{user.token_ativacao}/'
@@ -142,7 +140,7 @@ class ForgotPasswordSerializer(serializers.ModelSerializer):
             print(user)
             subject = 'Esqueceu a senha'
             message = f'Olá {user.first_name},\n\nPara redefinir sua senha, você pode usar o seguinte codigo: {token}.\n\nSe você não solicitou a redefinição da senha, ignore este email.'
-            email_from = 'suport@www.projetos-web.com'
+            email_from = 'suporto@www.projetos-web.com'
             recipient_list = [user.email]  # Passando o email como uma lista
             html_content = f'Olá {user.first_name},\n\nPara redefinir sua senha, você pode usar o seguinte codigo: {token}.\n\nSe você não solicitou a redefinição da senha, ignore este email.'
 
