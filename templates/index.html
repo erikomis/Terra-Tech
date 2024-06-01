@@ -8,6 +8,9 @@
     <title>Terra tech</title>
     <meta name="description" content="" />
     <meta name="keywords" content="" />
+
+		<link rel="icon" href="{% static 'assets/favicon.ico' %}" type="image/x-icon" />
+		
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
     <script src="{% static 'js/app.js' %}"></script>
 
@@ -216,11 +219,11 @@
       <!--Nav-->
       <div class="w-full container mx-auto p-6">
         <div class="w-full flex items-center justify-between">
-          <a
+          <span
             class="flex items-center text-2xl font-bold text-green-400 no-underline hover:no-underline lg:text-4xl"
-            href="#"
+           
           >
-            <svg
+            <!-- <svg
               class="h-8 fill-current pr-2 text-greem-600"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"
@@ -228,11 +231,24 @@
               <path
                 d="M10 20a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm-5.6-4.29a9.95 9.95 0 0 1 11.2 0 8 8 0 1 0-11.2 0zm6.12-7.64l3.02-3.02 1.41 1.41-3.02 3.02a2 2 0 1 1-1.41-1.41z"
               />
-            </svg>
-            Terra-tech
-          </a>
+            </svg> -->
 
-          <div class="flex w-1/2 justify-end content-center"></div>
+            <img
+              src="{% static 'logo.png'%}"
+              alt="logo"
+              style="width: 80px; height: 80px"
+            />
+          </span>
+
+          <div class="flex w-1/2 justify-end content-center">
+            <span class="h-12 pr-4 bounce-top-icons">
+              <img
+                src="{% static 'IMPACTA_LOGO.png' %}"
+                style="width: 100px; height: 100px"
+								alt="logo-impacta"
+              />
+            </span>
+          </div>
         </div>
       </div>
 
@@ -252,7 +268,7 @@
           <p
             class="leading-normal text-base md:text-2xl mb-8 text-center md:text-left slide-in-bottom-subtitle"
           >
-            o aplicativo para análise de folhas de café
+            O aplicativo para análise de folhas de café
           </p>
 
           <p
@@ -265,13 +281,14 @@
           >
             <button
               id="downloadBtn"
-              class="bg-green-400 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center gap-2"
+							class="rounded bg-green-400 px-4 py-2 font-bold text-white gap-2 hover:bg-green-600"
               onClick="downloadApp()"
             >
               Baixar o app
               <div id="loadingIndicator" class="loader"></div>
             </button>
           </div>
+					<div id="errorMessage" class="error-message">Falha no download. Por favor, tente novamente.</div>
         </div>
 
         <!--Right Col-->
@@ -279,6 +296,7 @@
           <img
             class="w-5/6 mx-auto lg:mr-0 slide-in-bottom"
             src="{% static 'devices.svg' %}"
+						alt="devices"
           />
         </div>
 

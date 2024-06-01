@@ -26,7 +26,7 @@ urlpatterns = [
     path('photos/', photo_views.List_Photos.as_view()),
     path('photos/filter/', photo_views.Filter_Photos.as_view()),
     path('' , UploadView.as_view()),
-    path('download/<str:filename>', DownloadView.as_view()),
+    path('download/', DownloadView.as_view()),
 ]
 urlpatterns += static ( settings.MEDIA_URL, document_root=settings.MEDIA_ROOT, )
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
