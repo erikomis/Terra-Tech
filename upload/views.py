@@ -5,7 +5,8 @@ from rest_framework.response import Response
 from django.http import FileResponse, Http404
 import os
 from django.conf import settings
-from django.http import HttpResponse, Http404
+from django.http import StreamingHttpResponse, Http404
+
 
 
 class UploadView(View):
@@ -15,14 +16,24 @@ class UploadView(View):
 
 class DownloadView(APIView):
 
-    def get(self, request, filename, format=None):
-        print(filename)
+    def get(self, request):
+        filename = 'terra-tech.apk'
         file_path = os.path.join(settings.MEDIA_ROOT, filename)
-        if os.path.exists(file_path):
+        
+        if not os.path.exists(file_path):
+            raise Http404('File not found')
+
+        def file_iterator(file_path, chunk_size=8192):
             with open(file_path, 'rb') as fh:
-                response = FileResponse(open(file_path, 'rb'), as_attachment=True, filename=filename)
-                return response
-        raise Http404('File not found')
+                while True:
+                    chunk = fh.read(chunk_size)
+                    if not chunk:
+                        break
+                    yield chunk
+
+        response = StreamingHttpResponse(file_iterator(file_path), content_type='application/vnd.android.package-archive')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
      
 
   
