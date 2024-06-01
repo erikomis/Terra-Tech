@@ -25,8 +25,16 @@ def parse_month_param(month_param):
 class UPLOAD_PHOTO(CreateAPIView):
     permission_classes = (IsAuthenticated,)
     parser_classes = [MultiPartParser, FormParser, JSONParser, FileUploadParser,]
+
+
+    def get_queryset(self):
+        user = self.request.user
+        return  user
     def post(self, request,):
-        serializer = PhotosSerializer(data=request.data)
+
+        serializer = PhotosSerializer(
+            data=request.data, context={'user': request.user}
+        )
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -36,7 +44,7 @@ class UPLOAD_PHOTO(CreateAPIView):
 class Delete_Photo(DestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = PhotosSerializer.Meta.model.objects.all()
-   
+
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)

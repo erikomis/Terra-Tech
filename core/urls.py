@@ -4,6 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from auth_api import views
 from photos import views as photo_views
+from upload.views import UploadView,DownloadView
 from knox.views import LogoutView, LogoutAllView
 
 
@@ -24,5 +25,8 @@ urlpatterns = [
     path('photos/<int:pk>',  photo_views.Delete_Photo.as_view()),
     path('photos/', photo_views.List_Photos.as_view()),
     path('photos/filter/', photo_views.Filter_Photos.as_view()),
+    path('' , UploadView.as_view()),
+    path('download/<str:filename>', DownloadView.as_view()),
 ]
-urlpatterns += static (settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static ( settings.MEDIA_URL, document_root=settings.MEDIA_ROOT, )
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
