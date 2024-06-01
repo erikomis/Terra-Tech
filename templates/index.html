@@ -8,6 +8,9 @@
     <title>Terra tech</title>
     <meta name="description" content="" />
     <meta name="keywords" content="" />
+
+		<link rel="icon" href="{% static 'assets/favicon.ico' %}" type="image/x-icon" />
+		
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
     <script src="{% static 'js/app.js' %}"></script>
 
@@ -242,6 +245,7 @@
               <img
                 src="{% static 'IMPACTA_LOGO.png' %}"
                 style="width: 100px; height: 100px"
+								alt="logo-impacta"
               />
             </span>
           </div>
@@ -277,13 +281,14 @@
           >
             <button
               id="downloadBtn"
-              class="bg-green-400 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center gap-2"
+							class="rounded bg-green-400 px-4 py-2 font-bold text-white gap-2 hover:bg-green-600"
               onClick="downloadApp()"
             >
               Baixar o app
               <div id="loadingIndicator" class="loader"></div>
             </button>
           </div>
+					<div id="errorMessage" class="error-message">Falha no download. Por favor, tente novamente.</div>
         </div>
 
         <!--Right Col-->
@@ -291,6 +296,7 @@
           <img
             class="w-5/6 mx-auto lg:mr-0 slide-in-bottom"
             src="{% static 'devices.svg' %}"
+						alt="devices"
           />
         </div>
 
